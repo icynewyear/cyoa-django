@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% block content %}
+
+
+<section class="register-photo">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Adventures</h4>
+            <table class="card-text">
+              <tr>
+                <th>Adventure Name:</th>
+                <th>Adventure Desc:</th>
+              </tr>
+              {% if adventure_list %}
+              {% for adventure in adventure_list %}
+              <tr>
+                <td>{{adventure.name}}</td>
+                <td>{{adventure.description}}</td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+            </table>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

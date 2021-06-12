@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
+
+from .views import AdventureListView, AdventureDetailView, AdventureUpdateView, AdventureCreateView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('adventure/', include('adventure.urls')),
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('', AdventureListView.as_view(), name= 'adventure-list'),
+    path('<int:pk>/', AdventureDetailView.as_view(), name= 'adventure-detail'),
+    path('<int:pk>/edit', AdventureUpdateView.as_view(), name= 'adventure-update'),
+    path('create/', AdventureCreateView.as_view(), name= 'adventure-create'),
+]

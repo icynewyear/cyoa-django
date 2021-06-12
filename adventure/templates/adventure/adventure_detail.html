@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% block content %}
+
+
+<section class="register-photo">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">{{adventure.name}}</h4>
+            {% if start_room %}
+            <h6 class="card-subtitle mb-2 text-muted"><a href="">Start Adventure</a></h6>
+            {% endif %}
+            <p class="card-text">
+              {{adventure.description}}
+            </p>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
