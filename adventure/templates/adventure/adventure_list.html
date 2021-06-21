@@ -4,26 +4,23 @@
 {% block content %}
 
 
-<section class="register-photo">
-    <div class="card">
+<div class="row">
+  <div class="col">
+    <h4 class="card-title">Adventures <a href="{% url 'adventure-create' %}"><i class="bi bi-plus-square" alt="Create Adventure"></i></a></h4>
+    {% if adventure_list %}
+    {% for adventure in adventure_list %}
+      <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Adventures</h4>
-            <table class="card-text">
-              <tr>
-                <th>Adventure Name:</th>
-                <th>Adventure Desc:</th>
-              </tr>
-              {% if adventure_list %}
-              {% for adventure in adventure_list %}
-              <tr>
-                <td>{{adventure.name}}</td>
-                <td>{{adventure.description}}</td>
-              </tr>
-              {% endfor %}
-              {% endif %}
-            </table>
+              <p>
+                <h3><a class="text-decoration-none text-primary" href="{% url 'adventure-detail' adventure.slug %}">{{adventure.name}}</a></h3>
+                <h5 class="text-muted">{{adventure.description}}</h5>
+              </p>
         </div>
     </div>
+    {% endfor %}
+    {% endif %}
+  </div>
+
 </section>
 
 

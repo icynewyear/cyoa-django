@@ -1,19 +1,27 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 from Mixins.modelMixins import SlugModelMixin, SortableModelMixin
 
 # Create your models here.
 
+class RoomManager(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset().filter(start_room=True)
+
+
 class Adventure(SlugModelMixin):
     name = models.CharField(blank=True, max_length=140)
     description = models.CharField(blank=True, max_length=255)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
     def get_absolute_url(self):
-        return reverse("adventure-detail", kwargs={"pk": self.pk})
+        return reverse("adventure-detail", kwargs={"slug": self.slug})
 
-class Room(SortableModelMixin):
+class Room(models.Model):
     ## TODO: handle upload path
     ## TODO: auto reordering
 
@@ -25,13 +33,14 @@ class Room(SortableModelMixin):
     #Foreign Keys
     adventure = models.ForeignKey(Adventure, on_delete=models.CASCADE)
 
-    group_by_field = 'adventure'
+    objects = models.Manager()
+    startroom = RoomManager()
 
     def __str__(self):
         return self.room_text
 
-    # def get_absolute_url(self):
-    #     return reverse("room-detail", kwargs={"pk": self.pk})
+    def get_absolute_url(self):
+        return reverse("play-room", kwargs={"pk": self.pk})
 
 class Choice(models.Model):
     display_text = models.CharField(blank=True, max_length=140)

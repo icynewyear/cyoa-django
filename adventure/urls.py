@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from .views import AdventureListView, AdventureDetailView, AdventureUpdateView, AdventureCreateView
+from .views import AdventureListView, AdventureDetailView, AdventureUpdateView, AdventureCreateView, RoomPlayView, register_view
 
 urlpatterns = [
     path('', AdventureListView.as_view(), name= 'adventure-list'),
-    path('<int:pk>/', AdventureDetailView.as_view(), name= 'adventure-detail'),
-    path('<int:pk>/edit', AdventureUpdateView.as_view(), name= 'adventure-update'),
+    path('register/', register_view, name="register"),
     path('create/', AdventureCreateView.as_view(), name= 'adventure-create'),
+    path('<slug:slug>/', AdventureDetailView.as_view(), name= 'adventure-detail'),
+    path('<slug:slug>/edit', AdventureUpdateView.as_view(), name= 'adventure-update'),
+    path('<slug:adv_slug>/<int:pk>/play', RoomPlayView.as_view(), name = 'play-room'),
 ]

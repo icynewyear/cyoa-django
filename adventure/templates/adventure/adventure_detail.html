@@ -7,9 +7,13 @@
 <section class="register-photo">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">{{adventure.name}}</h4>
+            <h4 class="card-title">{{adventure.name}}
+              {% if adventure.owner == user %}
+              <a href="{% url 'adventure-update' adventure.slug %}"<span class="badge bg-primary text-decoration-none">Edit</span></a>
+              {% endif %}
+            </h4>
             {% if start_room %}
-            <h6 class="card-subtitle mb-2 text-muted"><a href="">Start Adventure</a></h6>
+            <h6 class="card-subtitle mb-2 text-muted"><a href="{% url 'play-room' adventure.slug start_room %}">Start Adventure</a></h6>
             {% endif %}
             <p class="card-text">
               {{adventure.description}}

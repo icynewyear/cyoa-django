@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% block content %}
+
+
+
+    <div class="card align-self-center">
+        <div class="card-body">
+            <h4 class="card-title">{{room.adventure.name}}</h4>
+            <p class="card-text">
+              {{room.room_text}}
+            </p>
+            <ul>
+              {% for choice in room.choices.all %}
+              <li><a href="{% url 'play-room' room.adventure.slug choice.destination.pk %}">{{ choice.display_text }}</a></li>
+              {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+
+{% endblock %}

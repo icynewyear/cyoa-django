@@ -34,8 +34,14 @@ class SortableModelMixin(models.Model):
 
     #override this
     group_by_field = None
+    initial_order = 0
 
     order = models.IntegerField(blank=True, null=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial_order = self.order
+
 
     def get_num_sortables(self):
         if self.group_by_field != None:
@@ -86,7 +92,7 @@ class SortableModelMixin(models.Model):
             sortables.append(self.get_next(position=x))
         return sortables
 
-    def cascade_sortables_forward(self):
+    def cascade_sortables_forward(self,**kwargs):
         sortables = self.get_forward_sortables(new=True)
         for item in reversed(sortables):
             item.order += 1
@@ -100,11 +106,42 @@ class SortableModelMixin(models.Model):
             item.save()
         return
 
+    def move_forward(self):
+        next = self.get_next()
+        next.order -= 1
+        next.initial_order = next.order
+        next.save()
+        self.order += 1
+        self.initial_order = self.order
+        self.save()
+        return
+
+    def move_backward(self):
+        previous = self.get_previous()
+        previous.order += 1
+        previous.initial_order = previous.order
+        previous.save()
+        self.order -= 1
+        self.initial_order = self.order
+        self.save()
+        return
+
+    def change_order(self):
+        init_order = self.initial_order
+
+        while init_order < self.order:
+            self.move_forward()
+        while init_order > self.order:
+            self.move_backward()
+        return
+
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.cascade_sortables_forward()
+            self.cascade_sortables_forward(new=True)
+        elif self.initial_order != self.order:
+            self.change_order()
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
         self.cascade_sortables_backward()
+        super().delete(*args, **kwargs)
